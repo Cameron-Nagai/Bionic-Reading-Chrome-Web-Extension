@@ -8,7 +8,6 @@ toggleSwitch.addEventListener('change', () => {
   chrome.storage.sync.set({ enabled: toggleSwitch.checked }, () => {
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
       chrome.tabs.sendMessage(tabs[0].id, { message: 'toggleChanged' });
-      chrome.tabs.reload(tabs[0].id);
     });
   });
 });
