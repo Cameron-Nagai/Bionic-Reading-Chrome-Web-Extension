@@ -11,13 +11,24 @@ function makeFirstThreeLettersBold(text) {
 
 function processNode(node) {
   if (node.nodeType === Node.TEXT_NODE) {
-    const newText = makeFirstThreeLettersBold(node.textContent);
+    const parent = node.parentNode;
+    const boldText = makeFirstThreeLettersBold(node.textContent);
     const newNode = document.createElement('span');
-    newNode.innerHTML = newText;
-    node.replaceWith(newNode);
-  } else {
-    node.childNodes.forEach(child => processNode(child));
+    newNode.innerHTML = boldText;
+    parent.replaceChild(newNode, node);
+  } else if (node.nodeType === Node.ELEMENT_NODE) {
+    if (!['SCRIPT', 'STYLE', 'BUTTON', 'TEXTAREA', 'SELECT', 'SVG'].includes(node.tagName)) {
+      node.childNodes.forEach(child => processNode(child));
+    }
   }
 }
 
 processNode(document.body);
+
+const style = document.createElement('style');
+style.textContent = `
+  .first-three-bold {
+    font-weight: 900;
+  }
+`;
+document.head.appendChild(style);
